@@ -1,3 +1,3 @@
 # OnlineDresshot
 
-[Site](https://app.techconcept.shop/)
+[Site](https://m-ippei.github.io/OnlineDresshot/)

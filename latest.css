@@ -1,0 +1,130 @@
+html {
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+body {
+    margin: 0;
+    font-family: "M PLUS 1p"
+}
+
+#control {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    height: 10%;
+    place-items: center;
+    text-align: center;
+}
+
+#b_control {
+    position: fixed;
+    bottom: 10%;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    height: 10%;
+    width: 100%;
+    place-items: center;
+    text-align: center;
+    z-index: 1000;
+}
+
+#b2_control {
+    position: fixed;
+    top: 10%;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    height: 10%;
+    width: 100%;
+    place-items: center;
+    text-align: center;
+    z-index: 1000;
+}
+
+#b3_control {
+    position: fixed;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    height: 10%;
+    width: 100%;
+    place-items: center;
+    text-align: center;
+    z-index: 1000;
+}
+
+.ui {
+    display: block;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(to bottom right,#cc2b5e,#753a88);
+    border-radius: 1em;
+    color: white;
+    width: 90%;
+    height: 90%;
+    font-size: 2em;
+}
+
+
+video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: -5;
+}
+
+#lineArtCanvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 500;
+}
+
+#frameCanvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#preCanvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#genCanvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.topbar {
+    display: block;
+    appearance: none;
+    font-size: 50px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(to bottom right,#ec008c, #fc6767);
+    border-radius: 0.5em;
+    height: 1.3em;
+    color: white;
+}
+
+#disable {
+    display: block;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(to bottom right,#BDFFF3,#4AC29A);
+    border-radius: 1em;
+    color: white;
+    width: 90%;
+    height: 80%;
+    font-size: 2em;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Dresshot</title>
+    <!--
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    -->
+    <link href="latest.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
+</head>
+
+<body>
+    <div id="control" class="uicontrol">
+        <select class="topbar" id="styles"></select>
+        <select class="topbar" id="parts"></select>
+    </div>
+    <div id="b2_control" class="uicontrol">
+        <div class="ui" id="reset" onclick="IM.reset()">すべて消去</div>
+        <div></div>
+        <div></div>
+        <div class="ui" id="showAll" onclick="IM.showAll()">全体を見る</div>
+    </div>
+    <div id="b_control" class="uicontrol">
+        <div class="ui" id="preview" onclick="IM.preview()">撮り直し</div>
+        <div></div>
+        <div></div>
+        <div class="ui" id="show" onclick="IM.shot()">撮影・保存</div>
+    </div>
+    <div id="b3_control">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div id="disable" onclick="IM.disable()">ボタン表示切替</div>
+    </div>
+    <script src="items_json.js" type="module"></script>
+    <script src="latest.js" type="module"></script>
+    <script>let __element; const __time = setInterval(() => { document.querySelector("#vdbanner") && (document.querySelector("#vdbanner").style = "position:absolute;left:0;bottom:0;", document.querySelector("div#vdbanner a").style = "position:absolute;left:0;bottom:0;", document.querySelector("div a img").style = "max-width:458px;max-height:58px;position:absolute;left:0;bottom:0;", __element = document.querySelector("#vdbanner").cloneNode(!0), document.body.removeChild(document.querySelector("#vdbanner")), document.body.appendChild(__element), clearInterval(__time)) }, 5);</script>
+</body>
+
+</html>

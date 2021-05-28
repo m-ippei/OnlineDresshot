@@ -1,14 +1,24 @@
+/**
+ * 描画を作るクラス
+ */
 class ImageBuild {
 
     constructor(importItems = {}) {
         if (importItems !== {}) {
+            //読み込むJSONの設定
             this.items = importItems
+            //読み込んだイメージを重複保存しないためのURLのメモ
             this.urls = []
+
+            //最終的に作る画像のCanvas
             this.genImg = null
+            //服のアウトラインのCanvas
             this.lineArtCanvas = null
 
-
+            //オプションの設定にアクセスするためのハンドル
             this.itemOptions = document.querySelector('#styles')
+
+            //JSONから読み込んだオプションをHTMLに反映する
             if (this.items.items) {
                 for (let i = 0; i < this.items.items.length; i++) {
                     const itemOption = document.createElement('option')
@@ -18,6 +28,7 @@ class ImageBuild {
                 }
             }
 
+            //初期設定としてまず一番最初のオプションを読み込む
             if (this.items.items[0]["LineArtURL"]) {
                 this.partsOptions = document.querySelector('#parts')
                 for (let i = 0; i < this.items.items[0]["parts"].length; i++) {
@@ -29,9 +40,10 @@ class ImageBuild {
             }
 
 
-
+            //ブラウザによって挙動を変える
             const userAgent = navigator.userAgent.toLocaleLowerCase()
 
+            //Chrome
             if (userAgent.indexOf('chrome') != -1) {
                 this.itemOptions.addEventListener('change', (event) => {
                     IM.resetStyleOptions(event.target.value)
@@ -42,6 +54,7 @@ class ImageBuild {
                     IM.genCanvas.hidden = true
                     IM.preview()
                 })
+                //Safari
             } else if (userAgent.indexOf('safari') != -1) {
                 this.itemOptions.addEventListener('focusout', (event) => {
                     IM.resetStyleOptions(event.target.value)
@@ -51,6 +64,7 @@ class ImageBuild {
                     IM.genCanvas.hidden = true
                     IM.preview()
                 })
+                //デフォルト
             } else {
                 this.itemOptions.addEventListener('change', (event) => {
                     IM.resetStyleOptions(event.target.value)
@@ -62,18 +76,16 @@ class ImageBuild {
                 })
             }
 
-
+            //選択状態にする
             this.itemOptions.options[0].selected = true
-
-
-
+            //線画の画像を読み込む
             this.loadLineArtImage(this.items.items[0]["LineArtURL"])
-
-            //this.loadLineArtImage(items.lineArtURL)
-
         }
     }
 
+    /**
+     * 初期化
+     */
     Init() {
         this.videoCaptureWidth = 0
         this.videoCaptureHeight = 0
@@ -82,17 +94,21 @@ class ImageBuild {
         this.video.autoplay = true
         document.body.appendChild(this.video)
 
-
-
+        //画像の基となるCanvas
         this.baseCanvas = this.createCanvas('baseCanvas')
+        //線画のCanvas
         this.frameCanvas = this.createCanvas('frameCanvas', false, window.innerWidth)
+        //撮影ボタンを押した際に描画するCanvas
         this.shotCanvas = this.createCanvas('shotCanvas')
+        //撮影した画像からアイテム部分だけを反映するCanvas
         this.preCanvas = this.createCanvas('preCanvas')
+        //最終的に保存されるCanvas
         this.genCanvas = this.createCanvas('genCanvas')
 
         navigator.mediaDevices.getUserMedia({
             audio: false,
             video: {
+                //外側のカメラ
                 facingMode: 'environment',
             }
         }).then((stream) => {
@@ -107,6 +123,10 @@ class ImageBuild {
         })
     }
 
+    /**
+     * 線画の画像を読み込む
+     * @param {string} URL 
+     */
     loadLineArtImage(URL) {
 
         this.lineImg = this.createImageFromURL(URL, URL.replace(/\//g, "_").replace(/:/g, "_").replace(/\./g, "_"))
@@ -119,11 +139,13 @@ class ImageBuild {
             IM.lineArtCanvas.getContext('2d').drawImage(IM.lineImg, 0, 0)
             const laImg = IM.lineArtCanvas.getContext('2d').getImageData(0, 0, IM.width, IM.height)
 
+            //画像のα値が255の部分だけを抽出して、Canvasに反映する
             for (let i = 3; i < laImg.data.length; i += 4) {
                 if (laImg.data[i] === 255) {
                     laImg.data[i - 3] = 0
                     laImg.data[i - 2] = 0
                     laImg.data[i - 1] = 0
+                    //線画を半透明にする
                     laImg.data[i] = 128
                 }
             }
@@ -133,6 +155,10 @@ class ImageBuild {
         }
     }
 
+    /**
+     * URLからイメージを読み込んでブラウザに追加する
+     * @param {string} URL 
+     */
     loadImage(URL) {
         if (this.urls.includes(URL)) {
             this.baseImg = document.querySelector(`#${URL.replace(/\//g, "_").replace(/:/g, "_").replace(/\./g, "_")}`)
@@ -149,6 +175,10 @@ class ImageBuild {
         }
     }
 
+    /**
+     * アイテムを読み込んで、そのアイテムの描画の設定をする
+     * @param {string} styleID 
+     */
     resetStyleOptions(styleID) {
         this.video.hidden = true
 
@@ -205,11 +235,16 @@ class ImageBuild {
             IM.loadImage(IM.partsOptions.value)
 
             IM.reset()
-            //IM.preview()
-
         }
     }
 
+    /**
+     * 内部処理用の関数
+     * キャンバスの更新
+     * @param {Image} Img 
+     * @param {Canvas} Base 
+     * @param {Canvas} Frame 
+     */
     refreshBaseAndFrame(Img, Base, Frame) {
         Base.getContext('2d').putImageData(Base.getContext('2d').createImageData(this.width, this.height), 0, 0)
         Base.getContext('2d').drawImage(Img, 0, 0)
@@ -236,6 +271,12 @@ class ImageBuild {
         Frame.getContext('2d').putImageData(frameImg, (window.innerWidth / 2) - (this.width / 2), 0)
     }
 
+    /**
+     * 画像のURLとIDを読み込んでその画像オブジェクトを返す
+     * @param {string} URL 
+     * @param {string} ID 
+     * @returns Imageオブジェクト
+     */
     createImageFromURL(URL, ID) {
         const Img = new Image()
         Img.crossOrigin = "Anonymous"
@@ -246,6 +287,14 @@ class ImageBuild {
         return Img
     }
 
+    /**
+     * Canvasを作るメソッド
+     * Canvasをドキュメントに追加して、そのCanvasのハンドルを返す
+     * @param {string} ID 
+     * @param {boolean} isHidden 
+     * @param {number} canvasWidth 
+     * @returns Canvasオブジェクト
+     */
     createCanvas(ID, isHidden = true, canvasWidth) {
         const cv = document.createElement('canvas')
 
@@ -258,6 +307,9 @@ class ImageBuild {
         return cv
     }
 
+    /**
+     * カメラの映像だけを見えるようにする設定
+     */
     preview() {
         this.genCanvas.hidden = true
         this.preCanvas.hidden = true
@@ -265,8 +317,10 @@ class ImageBuild {
         this.video.hidden = false
     }
 
+    /**
+     * shotCanvasにカメラの映像を反映する
+     */
     shot() {
-
         const elementVideoWidth = parseInt(window.getComputedStyle(document.querySelector('video')).getPropertyValue('width'))
         const elementCanvasWidth = parseInt(window.getComputedStyle(this.lineArtCanvas).getPropertyValue('width'))
         const fixedCaptureCanvasWidth = ((1 / (elementVideoWidth / this.videoCaptureWidth)) * elementCanvasWidth)
@@ -278,12 +332,18 @@ class ImageBuild {
         this.preCanvas.hidden = false
     }
 
+    /**
+     * 生成した画像を表示する
+     */
     showAll() {
         this.video.hidden = true
         this.frameCanvas.hidden = true
         this.genCanvas.hidden = false
     }
 
+    /**
+     * genCanvasをリセットする
+     */
     reset() {
         this.preCanvas.hidden = true
         this.genImg = this.genCanvas.getContext('2d').createImageData(this.width, this.height)
@@ -291,6 +351,11 @@ class ImageBuild {
 
     }
 
+    /**
+     * 内部処理用の関数
+     * genCanvasに反映する
+     * @param {Canvas} Base 
+     */
     generate(Base) {
         if (this.genImg === null) {
             this.genImg = this.genCanvas.getContext('2d').createImageData(this.width, this.height)
@@ -318,6 +383,9 @@ class ImageBuild {
         this.preCanvas.getContext('2d').putImageData(preImg, 0, 0)
     }
 
+    /**
+     * スクリーンショット用に画面を非表示にする
+     */
     disable() {
         if (window.getComputedStyle(document.querySelector('.uicontrol')).getPropertyValue('display') === 'none') {
             document.querySelectorAll('.uicontrol').forEach((element) => {
@@ -332,8 +400,9 @@ class ImageBuild {
 
 }
 
+//JSONファイルから読み込む
 import { items as importITEMS } from './items_json.js'
-
+//デフォルトの操作を無効にする
 document.addEventListener('touchmove', (event) => { event.preventDefault() }, { passive: false })
-
+//起点ポイントのインスタンス
 window.IM = new ImageBuild(importITEMS)

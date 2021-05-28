@@ -1,14 +1,17 @@
 html {
+    /* スクロールバーを表示しない */
     overflow: hidden;
+    /* ダブルタップでズームを無効にする */
     touch-action: manipulation;
 }
 
 body {
-    margin: 0;
+    margin: 0; 
     font-family: "M PLUS 1p"
 }
 
-#control {
+/* 一番上のパーツ */
+#control_top1 {
     display: grid;
     grid-template-columns: repeat(2,1fr);
     height: 10%;
@@ -16,19 +19,8 @@ body {
     text-align: center;
 }
 
-#b_control {
-    position: fixed;
-    bottom: 10%;
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    height: 10%;
-    width: 100%;
-    place-items: center;
-    text-align: center;
-    z-index: 1000;
-}
-
-#b2_control {
+/* 上から2番目のパーツ */
+#control_top2 {
     position: fixed;
     top: 10%;
     display: grid;
@@ -40,7 +32,21 @@ body {
     z-index: 1000;
 }
 
-#b3_control {
+/* 下から2番目のパーツ */
+#control_bottom2 {
+    position: fixed;
+    bottom: 10%;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    height: 10%;
+    width: 100%;
+    place-items: center;
+    text-align: center;
+    z-index: 1000;
+}
+
+/* 一番下のパーツ */
+#control_bottom1 {
     position: fixed;
     bottom: 0;
     display: grid;
@@ -52,6 +58,7 @@ body {
     z-index: 1000;
 }
 
+/* 中央4つのcss設定 */
 .ui {
     display: block;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
@@ -73,6 +80,7 @@ video {
     z-index: -5;
 }
 
+/* 一番上のレイヤー(服のアウトライン) */
 #lineArtCanvas {
     position: fixed;
     top: 50%;
@@ -82,6 +90,7 @@ video {
     z-index: 500;
 }
 
+/* 上から２番目のレイヤー(選択アイテムのみ反映するレイヤー) */
 #frameCanvas {
     position: fixed;
     top: 50%;
@@ -90,6 +99,7 @@ video {
     transform: translateX(-50%) translateY(-50%);
 }
 
+/* カメラからの画像を写すキャンバス */
 #preCanvas {
     position: fixed;
     top: 50%;
@@ -98,6 +108,7 @@ video {
     transform: translateX(-50%) translateY(-50%);
 }
 
+/* 生成した画像を表示するキャンバス */
 #genCanvas {
     position: fixed;
     top: 50%;
@@ -106,6 +117,7 @@ video {
     transform: translateX(-50%) translateY(-50%);
 }
 
+/* 一番上のui設定 */
 .topbar {
     display: block;
     appearance: none;
@@ -118,6 +130,7 @@ video {
     color: white;
 }
 
+/* 一番下のui設定 */
 #disable {
     display: block;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
